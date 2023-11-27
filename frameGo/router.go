@@ -24,13 +24,15 @@ func (r *Router) AddRoute(p string, v string) {
 
 func (r *Router) ResolvRoute() {
 	URL := js.Global().Get("location").Get("href").String()
+	
 	element := js.Global().Get("document").Call("querySelector", "#App")
 	match := MatchPath(URL)
 	for i, route := range r.routes {
-		if route.path == match {
+		if route.path == match {		
 			element.Set("innerHTML", route.view)
+			js.Global().Get("history").Call("pushState", js.Null(), "", route.path)
 			break
-		} else if i == len(r.routes) - 1 {
+		 } else if i == len(r.routes)-1 {
 			element.Set("innerHTML", "<h1>Error 404: Page Not Found")
 		}
 	}
